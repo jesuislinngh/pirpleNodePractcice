@@ -17,7 +17,6 @@ var httpServer = http.createServer(function (req, res) {
 
 // Start the server
 httpServer.listen(config.httpPort, function() {
-
   console.log("The server is listenning on port " + config.httpPort + " now in " + config.envName );
 });
 
@@ -101,14 +100,14 @@ var unifiedServer = function(req, res) {
         // Convert the payload to a string_decoder
         var payloadString = JSON.stringify(payload);
 
-        //Return the response.
+        // Return the response.
         res.setHeader('Content-Type', 'application/json');
         res.writeHead(statusCode);
         // Send the response
         res.end(payloadString);
 
         // log the requests path
-        console.log("Returnning response:", statusCode, payloadString);
+        console.log("Returnning response:", statusCode, payloadString, path, queryObject);
 
       });
     });

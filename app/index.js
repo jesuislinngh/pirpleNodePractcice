@@ -7,8 +7,17 @@ var http = require('http');
 var https = require('https');
 var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
-var config = require('./config');
+var config = require('./lib/config');
+var handlers = require('./lib/handlers');
 var fs = require('fs');
+var _data = require('./lib/data');
+var helpers = require('./lib/helpers');
+
+// Testing
+// @TODO: delete this
+/* _data.delete('test', 'newFile', function(error) {
+  console.log("This was the ", error);
+}); */
 
 // The server should respond to all requests with a string
 var httpServer = http.createServer(function (req, res) {
@@ -35,18 +44,9 @@ httpsServer.listen(config.httpsPort, function() {
   console.log("The server is listenning on port " + config.httpsPort + " now in " + config.envName );
 });
 
-var handlers = {};
-
-handlers.ping = function(data, callback) {
-  callback(200);
-};
-
-handlers.notFound = function(data, callback) {
-  callback(404);
-};
-
 var router = {
-  'ping': handlers.ping
+  'ping': handlers.ping,
+  'users': handlers.users
 };
 
 // All the server logic for both the http and https server
@@ -78,16 +78,17 @@ var unifiedServer = function(req, res) {
       buffer += decoder.end();
       console.log("Returnning response:", trimmedPath);
       // Choose the handler this request should go to. If one is not found, use the not found handler
-      var chosenHandler =
+      let chosenHandler =
        typeof(router[trimmedPath]) != undefined ?
         router[trimmedPath] : handlers.notFound;
 
-      var data = {
+
+      let data = {
         'trimmedPath': trimmedPath,
         'queryStringObject': queryObject,
         'method': method,
         'headers': headers,
-        'payload': buffer
+        'payload': helpers.parseJsonToObject(JSON.stringify(buffer))
       };
 
       chosenHandler(data, function(statusCode, payload) {

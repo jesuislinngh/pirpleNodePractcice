@@ -216,6 +216,82 @@ handlers._users.delete = function(data, callback) {
     }
 };
 
+// Tokens
+handlers.tokens = function(data, callback) {
+  var acceptableMethods = ['post', 'get', 'put', 'delete'];
+
+  if (acceptableMethods.indexOf(data.method) > -1) {
+    handlers._tokens[data.method](data, callback);
+  } else {
+    callback(405);
+  }
+};
+
+// Container for all the tokens methods
+handlers._tokens = {};
+
+// Tokens post
+// Required: phone, password
+handlers._tokens.post = function (data, callback) {
+  let jsonParsedData = JSON.parse(data.payload);
+
+  let phone = typeof(jsonParsedData.phone) == 'string' &&
+   jsonParsedData.phone.trim().length == 10 ?
+    jsonParsedData.phone.trim() : false;
+
+  let password = typeof(jsonParsedData.password) == 'string' &&
+   jsonParsedData.password.trim().length > 0 ?
+    jsonParsedData.password.trim() : false;
+
+  if(phone && password) {
+    // Look up the user who matches that phone number
+    _data.read('users', phone, function(error, data) {
+
+      if(!error && data) {
+        // Hash the sent password and compare it to the stored in the user's password.
+        let hashedPassword = helpers.hash(password);
+
+        if(hashedPassword == data.hashedPassword) {
+          // If valid create a new token with a random name, set experiration to one hour in the future
+          let tokenId = helpers.createRandomString(20);
+          let expires = Date.now() + 1000 * 60 * 60;
+
+          let tokenObject = {
+            'phone': phone,
+            'id': tokenId,
+            'expires': expires
+          };
+        } else {
+          callback(400, {'Error': 'Passwords do not match'});
+        }
+
+
+      } else {
+        callback(400, {'Error': 'Could find the given user'});
+      }
+
+    });
+  } else {
+    callback(400, {'Error': 'Invalid phone or password'});
+  }
+
+};
+
+// Tokens get
+handlers._tokens.get = function (data, callback) {
+
+};
+
+// Tokens put
+handlers._tokens.put = function (data, callback) {
+
+};
+
+// Tokens delete
+handlers._tokens.delete = function (data, callback) {
+
+};
+
 handlers.ping = function(data, callback) {
   callback(200);
 };

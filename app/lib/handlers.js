@@ -586,7 +586,8 @@ handlers._checks.post = function(data, callback) {
                 'url': url,
                 'method': method,
                 'codes': codes,
-                'timeout': timeout
+                'timeout': timeout,
+                last: Date.now()
               };
 
               // Save the object

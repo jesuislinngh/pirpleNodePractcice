@@ -16,15 +16,9 @@ environments.staging = {
   'hashingSecret': 'thisIsASecret',
   'maxChecks': 5,
   'twilio' : {
-<<<<<<< HEAD
     'accountSid' : '',
     'authToken' : '',
     'fromPhone' : ''
-=======
-    'accountSid' : 'AC535d3d5846c48069bfef3172ba80481d',
-    'authToken' : '8984c13dc6e5e3a6fe80e5df09007774',
-    'fromPhone' : '+14155552345'
->>>>>>> 938726d0885824e2f11160cd8815f6d33117fb64
   }
 };
 // Production environment.
@@ -35,15 +29,9 @@ environments.production = {
   'hashingSecret': 'thisIsAlsoASecret',
   'maxChecks': 5,
   'twilio' : {
-<<<<<<< HEAD
     'accountSid' : '',
     'authToken' : '',
     'fromPhone' : ''
-=======
-    'accountSid' : 'AC535d3d5846c48069bfef3172ba80481d',
-    'authToken' : '8984c13dc6e5e3a6fe80e5df09007774',
-    'fromPhone' : '+14155552345'
->>>>>>> 938726d0885824e2f11160cd8815f6d33117fb64
   }
 };
 
